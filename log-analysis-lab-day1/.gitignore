@@ -1,0 +1,29 @@
+# Ignore VSCode settings
+.vscode/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Ignore temporary files
+*.log
+*.tmp
+*.bak
+*.swp
+
+# Ignore Python virtual environments if you ever add scripts later
+venv/
+env/
+
+# Ignore node_modules if you ever add frontend tooling
+node_modules/
+
+# Ignore compiled files
+*.pyc
+__pycache__/
+
+# Ignore images from cache/thumbnails (if any)
+*.png~
+*.jpg~
+*.jpeg~
